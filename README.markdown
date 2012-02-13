@@ -1,5 +1,33 @@
-arduinoMakefile
-===============
+# This fork is a port for Mac OSX and Arduino 1.0
+
+It should works out of the box if you are using the UNO. Just edit your sketch filename in the Makefile and type `make` to compile and upload your sketch.
+
+## Install
+
+* Download the [IDE for Mac OSX](http://arduino.cc/en/Main/Software)
+* Add the following dir to your PATH environment variable
+
+        /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin
+
+* Copy the avrdude.conf file to /usr/local/etc
+
+        $ cp /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/etc/avrdude.conf /usr/local/etc
+
+## Usage
+
+Compile only
+
+    $ make compile
+
+Compile and upload
+
+    $ make
+
+Reset
+
+    $ make reset
+
+# arduinoMakefile
 
 This project is just a simple Makefile for Arduino. There are some Makefiles in the Web but all of them are complicated and some does not work properly for newer versions of Arduino. This Makefile is simple and just works!
 
@@ -15,51 +43,6 @@ It does:
 **WARNING[1]:** by now the feature of compiling external libraries (even standard libraries and third-party libraries) is not implemented. So, if you have some `#include` in your project, probably it won't work -- but don't be afraid, I'm working on this.
 
 
-
-Why another Makefile?
----------------------
+## Why another Makefile?
 
 The question was answered in the section above -- but I'm studying all the Makefiles for Arduino that I found in the Web and trying to implement the simplest way of doing it right. I've created a [**comprehensive list of Makefiles**](https://github.com/turicas/arduinoMakefile/blob/master/resources.markdown) and I'm categorizing them.
-
-
-Dependencies
-------------
-
-You need to have installed:
-
-- Arduino IDE unpacked -- we just use the libraries' source code
-- `gcc-avr`, `avr-libc` and `binutils-avr` -- for compilation
-- `avrdude` -- for upload
-- `make` -- to interpret the Makefile
-
-
-If you run Ubuntu or Debian, just execute this recipe:
-
-
-    sudo aptitude install gcc-avr avr-libc binutils-avr avrdude make
-    wget http://arduino.googlecode.com/files/arduino-0022.tgz
-    tar xfz arduino-0022.tgz
-
-
-
-Usage
------
-
-The head of Makefile is self-explanatory, please read the comments and change these variables:
-
-
-    # Sketch filename without .pde (should be in the same directory of Makefile)
-    SKETCH_NAME=Blink
-    # The port Arduino is connected
-    #  Uno, in GNU/linux: generally /dev/ttyACM0
-    #  Duemilanove, in GNU/linux: generally /dev/ttyUSB0
-    PORT=/dev/ttyACM0
-    # The path of Arduino IDE
-    ARDUINO_DIR=/home/alvaro/arduino-0022
-    # Boardy type: use "arduino" for Uno or "skt500v1" for Duemilanove
-    BOARD_TYPE=arduino
-    # Baud-rate: use "115200" for Uno or "19200" for Duemilanove
-    BAUD_RATE=115200
-
-
-**WARNING:** you need to have the configuration for Arduino Uno at your `avrdude.conf`. For some strange reason, the `avrdude.conf` at the Arduino IDE package does not have Arduino Uno configuration, but it works if do you use the default avrdude configuration file for Ubuntu package (at `/etc/avrdude.conf`).

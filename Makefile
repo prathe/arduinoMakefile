@@ -20,15 +20,10 @@
 #  http://www.gnu.org/licenses/gpl-2.0.html                                   #
 ###############################################################################
 
-#Sketch, board and IDE path configuration (in general change only this section)
-# Sketch filename (should be in the same directory of Makefile)
-SKETCH_NAME=Blink.pde
+SKETCH_NAME=blink.ino
 # The port Arduino is connected
-#  Uno, in GNU/linux: generally /dev/ttyACM0
-#  Duemilanove, in GNU/linux: generally /dev/ttyUSB0
-PORT=/dev/ttyACM0
-# The path of Arduino IDE
-ARDUINO_DIR=/home/alvaro/arduino-0022
+PORT=/dev/tty.usbmodemfd121
+ARDUINO_DIR=/Applications/Arduino.app/Contents/Resources/Java
 # Boardy type: use "arduino" for Uno or "stk500v1" for Duemilanove
 BOARD_TYPE=arduino
 # Baud-rate: use "115200" for Uno or "19200" for Duemilanove
@@ -36,18 +31,19 @@ BAUD_RATE=115200
 
 #Compiler and uploader configuration
 ARDUINO_CORE=$(ARDUINO_DIR)/hardware/arduino/cores/arduino
-INCLUDE=-I. -I$(ARDUINO_DIR)/hardware/arduino/cores/arduino
+INCLUDE=-I. -I$(ARDUINO_DIR)/hardware/arduino/cores/arduino \
+	-I$(ARDUINO_DIR)/hardware/arduino/variants/standard
 TMP_DIR=/tmp/build_arduino
 MCU=atmega328p
 DF_CPU=16000000
-CC=/usr/bin/avr-gcc
-CPP=/usr/bin/avr-g++
-AVR_OBJCOPY=/usr/bin/avr-objcopy 
-AVRDUDE=/usr/bin/avrdude
+CC=avr-gcc
+CPP=avr-g++
+AVR_OBJCOPY=avr-objcopy 
+AVRDUDE=avrdude
 CC_FLAGS=-g -Os -w -Wall -ffunction-sections -fdata-sections -fno-exceptions \
 	 -std=gnu99
 CPP_FLAGS=-g -Os -w -Wall -ffunction-sections -fdata-sections -fno-exceptions
-AVRDUDE_CONF=/etc/avrdude.conf
+AVRDUDE_CONF=/usr/local/etc/avrdude.conf
 CORE_C_FILES=pins_arduino WInterrupts wiring_analog wiring wiring_digital \
 	     wiring_pulse wiring_shift
 CORE_CPP_FILES=HardwareSerial main Print Tone WMath WString
@@ -64,7 +60,7 @@ compile:
 		@echo '# *** Compiling...'
 
 		mkdir $(TMP_DIR)
-		echo '#include "WProgram.h"' > "$(TMP_DIR)/$(SKETCH_NAME).cpp"
+		echo '#include "Arduino.h"' > "$(TMP_DIR)/$(SKETCH_NAME).cpp"
 		cat $(SKETCH_NAME) >> "$(TMP_DIR)/$(SKETCH_NAME).cpp"
 
 		@#$(CPP) -MM -mmcu=$(MCU) -DF_CPU=$(DF_CPU) $(INCLUDE) \
@@ -105,9 +101,9 @@ compile:
 
 reset:
 		@echo '# *** Resetting...'
-		stty --file $(PORT) hupcl
+		stty -f $(PORT) hupcl
 		sleep 0.1
-		stty --file $(PORT) -hupcl
+		stty -f $(PORT) -hupcl
 		
 
 upload:
